@@ -82,7 +82,7 @@ jobs:
       - name: Install dependencies
         run: brew install autoconf automake libtool hidapi libusb
       - run: autoreconf --install --force
-      - run: ./configure --prefix=/usr --host/--target/--build=aarch64-apple-darwin
+      - run: ./configure --prefix=/usr --host=aarch64-apple-darwin --target=aarch64-apple-darwin --build=aarch64-apple-darwin
       - run: make
       - run: make distcheck
       - name: Package artifacts
