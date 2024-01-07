@@ -14,47 +14,14 @@ jobs:
       fail-fast: false
       matrix:
         compiler: [gcc, clang]
-        arch: [x86_64, arm64]
 
     env:
       CC: ${{ matrix.compiler }}
-      ARCH: ${{ matrix.arch }}
 
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: sudo apt-get install libbluetooth-dev libusb-1.0-0-dev
-      - run: autoreconf --install --force
-      - run: ./configure --prefix=/usr --host=${{ matrix.arch }}-apple-darwin
-      - run: make
-      - run: make distcheck
-      - name: Package artifacts
-        run: |
-          make install DESTDIR=$PWD/artifacts
-          tar -czf ${{ github.job }}-${{ matrix.compiler }}.tar.gz -C artifacts usr
-      - uses: actions/upload-artifact@v3
-        with:
-          name: ${{ github.job }}-${{ matrix.compiler }}-${{ matrix.arch }}
-          path: ${{ github.job }}-${{ matrix.compiler }}-${{ matrix.arch }}.tar.gz
-
-  mac:
-
-    name: Mac
-
-    runs-on: macos-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        compiler: [gcc, clang]
-
-    env:
-      CC: ${{ matrix.compiler }}
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install dependencies
-        run: brew install autoconf automake libtool hidapi libusb
       - run: autoreconf --install --force
       - run: ./configure --prefix=/usr
       - run: make
@@ -67,6 +34,39 @@ jobs:
         with:
           name: ${{ github.job }}-${{ matrix.compiler }}
           path: ${{ github.job }}-${{ matrix.compiler }}.tar.gz
+
+  mac:
+
+    name: Mac
+
+    runs-on: macos-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc, clang]
+        arch: [x86_64, arm64]
+
+    env:
+      CC: ${{ matrix.compiler }}
+      ARCH: ${{ matrix.arch }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: brew install autoconf automake libtool hidapi libusb
+      - run: autoreconf --install --force
+      - run: ./configure --prefix=/usr --host=${{ matrix.arch }}-apple-darwin
+      - run: make
+      - run: make distcheck
+      - name: Package artifacts
+        run: |
+          make install DESTDIR=$PWD/artifacts
+          tar -czf ${{ github.job }}-${{ matrix.compiler }}.tar.gz -C artifacts usr
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.job }}-${{ matrix.compiler }}-${{ matrix.arch }}
+          path: ${{ github.job }}-${{ matrix.compiler }}-${{ matrix.arch }}.tar.gz
 
   windows:
 
