@@ -3,9 +3,7 @@ name: Build
 on: [push, pull_request]
 
 jobs:
-
   linux:
-
     name: Linux
 
     runs-on: ubuntu-latest
@@ -36,7 +34,6 @@ jobs:
           path: ${{ github.job }}-${{ matrix.compiler }}.tar.gz
 
   mac-x86_64:
-
     name: Mac (x86_64)
 
     runs-on: macos-latest
@@ -67,8 +64,7 @@ jobs:
           path: ${{ github.job }}-${{ matrix.compiler }}-x86_64.tar.gz
 
   mac-arm64:
-
-    name: Mac (x86_64)
+    name: Mac (arm64)
 
     runs-on: macos-latest
 
@@ -99,7 +95,6 @@ jobs:
           path: ${{ github.job }}-${{ matrix.compiler }}-arm64.tar.gz
 
   windows:
-
     name: Windows
 
     runs-on: ubuntu-latest
@@ -156,7 +151,6 @@ jobs:
           path: ${{ github.job }}-${{ matrix.arch }}.tar.gz
 
   msvc:
-
     name: Visual Studio
 
     runs-on: windows-latest
@@ -187,7 +181,6 @@ jobs:
           path: contrib/msvc/${{ matrix.platform }}/${{ env.CONFIGURATION }}/bin
 
   android:
-
     name: Android
 
     runs-on: ubuntu-latest
