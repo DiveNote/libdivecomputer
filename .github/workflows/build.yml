@@ -62,7 +62,7 @@ jobs:
       - name: Package artifacts
         run: |
           make install DESTDIR=$PWD/artifacts
-          tar -czf ${{ github.job }}-${{ matrix.compiler }}.tar.gz -C artifacts usr
+          tar -czf ${{ github.job }}-${{ matrix.compiler }}-${{ matrix.arch }}.tar.gz -C artifacts usr
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ github.job }}-${{ matrix.compiler }}-${{ matrix.arch }}
