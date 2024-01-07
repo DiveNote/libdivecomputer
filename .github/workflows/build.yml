@@ -66,7 +66,7 @@ jobs:
   mac-arm64:
     name: Mac (arm64)
 
-    runs-on: macos-latest
+    runs-on: macos-latest-xlarge
 
     strategy:
       fail-fast: false
@@ -74,15 +74,14 @@ jobs:
         compiler: [gcc, clang]
 
     env:
-      CC: 'clang'
-      CFLAGS: '-target arm64-apple-macos11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -mmacosx-version-min=11.0'
+      CC: ${{ matrix.compiler }}
 
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: brew install autoconf automake libtool hidapi libusb
       - run: autoreconf --install --force
-      - run: "./configure --host=x86_64-apple-darwin --build=x86_64-apple-darwin --target=aarch64-apple-darwin --prefix=/usr"
+      - run: ./configure --prefix=/usr
       - run: make
       - run: make distcheck
       - name: Package artifacts
