@@ -68,31 +68,25 @@ jobs:
 
     runs-on: macos-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        compiler: [clang]
-
     env:
-      CC: ${{ matrix.compiler }}
-      CFLAGS: "-target arm64-apple-macos11"
+      CC: 'clang'
 
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: brew install autoconf automake libtool hidapi libusb
       - run: autoreconf --install --force
-      - run: ./configure --prefix=/usr --host=aarch64-apple-darwin --target=aarch64-apple-darwin --build=aarch64-apple-darwin
+      - run: ./configure --prefix=/usr --host=x86_64-apple-darwin --build=x86_64-apple-darwin --target=aarch64-apple-darwin 
       - run: make
       - run: make distcheck
       - name: Package artifacts
         run: |
           make install DESTDIR=$PWD/artifacts
-          tar -czf ${{ github.job }}-${{ matrix.compiler }}-arm64.tar.gz -C artifacts usr
+          tar -czf ${{ github.job }}-clang-arm64.tar.gz -C artifacts usr
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.job }}-${{ matrix.compiler }}-arm64
-          path: ${{ github.job }}-${{ matrix.compiler }}-arm64.tar.gz
+          name: ${{ github.job }}-clang-arm64
+          path: ${{ github.job }}-clang-arm64.tar.gz
 
   windows:
     name: Windows
