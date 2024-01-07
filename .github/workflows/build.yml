@@ -68,8 +68,14 @@ jobs:
 
     runs-on: macos-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc, clang]
+
     env:
       CC: 'clang'
+      CFLAGS: '-target arm64-apple-macos11'
 
     steps:
       - uses: actions/checkout@v3
@@ -82,11 +88,11 @@ jobs:
       - name: Package artifacts
         run: |
           make install DESTDIR=$PWD/artifacts
-          tar -czf ${{ github.job }}-clang-arm64.tar.gz -C artifacts usr
+          tar -czf ${{ github.job }}-${{ matrix.compiler }}-arm64.tar.gz -C artifacts usr
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.job }}-clang-arm64
-          path: ${{ github.job }}-clang-arm64.tar.gz
+          name: ${{ github.job }}-${{ matrix.compiler }}-arm64
+          path: ${{ github.job }}-${{ matrix.compiler }}-arm64.tar.gz
 
   windows:
     name: Windows
